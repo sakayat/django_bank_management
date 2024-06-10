@@ -8,7 +8,7 @@ class UserBankAccount(models.Model):
     account_type = models.CharField(max_length=10, choices=account_type)
     account_no = models.IntegerField(unique=True)
     birth_date = models.DateTimeField(blank=True, null=True)
-    gender = models.CharField(choices=gender_type)
+    gender = models.CharField(max_length=10, choices=gender_type)
     initial_deposit_date = models.DateField(auto_now_add=True)
     balance = models.DecimalField(default=0, max_digits=14, decimal_places=2)
     
