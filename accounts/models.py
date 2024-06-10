@@ -12,6 +12,9 @@ class UserBankAccount(models.Model):
     initial_deposit_date = models.DateField(auto_now_add=True)
     balance = models.DecimalField(default=0, max_digits=14, decimal_places=2)
     
+    def __str__(self) -> str:
+        return str(self.account_no)
+    
 
 class UserAddress(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="address")
@@ -20,3 +23,5 @@ class UserAddress(models.Model):
     postal_code = models.IntegerField()
     country = models.CharField(max_length=100)
     
+    def __str__(self) -> str:
+        return self.user.email
