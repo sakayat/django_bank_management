@@ -18,9 +18,7 @@ class TransactionsForm(forms.ModelForm):
 
     def save(self, commit=True):
         self.instance.account = self.account
-        self.instance.balance_after_transactions = (
-            self.account.balance + self.cleaned_data.get("amount")
-        )
+        self.instance.balance_after_transactions = self.account.balance
         return super().save(commit)
 
 
@@ -54,6 +52,7 @@ class WithdrawForm(TransactionsForm):
             )
 
         return amount
+
 
 class LoanRequestForm(TransactionsForm):
     def clean_amount(self):
