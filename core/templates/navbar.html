@@ -22,7 +22,7 @@
           <a class="nav-link" aria-current="page" href="/"> Report </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/"> Deposit </a>
+          <a class="nav-link" aria-current="page" href="{% url 'deposit_money' %}"> Deposit </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="/"> Withdraw </a>
@@ -34,7 +34,7 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">
             Welcome <span>{{request.user}} </span>
-            <span class="fw-bold">{{request.user.account.balance}}</span>
+            <span class="fw-bold">({{request.user.account.balance}})</span>
           </a>
         </li>
         <li class="nav-item">

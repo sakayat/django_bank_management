@@ -1,4 +1,4 @@
-account_type = (
+transaction_type = (
     (1, "Deposit"),
     (2, "Withdrawal"),
     (3, "Loan"),
