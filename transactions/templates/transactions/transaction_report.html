@@ -1,7 +1,12 @@
 {% extends "base.html" %} {% block content %}
 <div class="transaction_report py-3">
   <h1 class="text-center">Transaction Report</h1>
-  <form action="" mehtod="get" class="">
+  <a
+    href="{% url 'loan_list' %}"
+    class="text-decoration-none text-black py-2 fw-bold fs-3"
+    >Loan List</a
+  >
+  <form action="" mehtod="get">
     <div class="filter_report d-flex align-items-center gap-5 py-3 w-100">
       <div class="w-100">
         <label for="start_date">From:</label>
