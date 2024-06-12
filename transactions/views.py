@@ -86,30 +86,42 @@ class TransactionReportView(LoginRequiredMixin, ListView):
     template_name = "transactions/transaction_report.html"
     model = TransactionsModel
 
-
     def get_queryset(self):
         queryset = super().get_queryset().filter(account=self.request.user.account)
-        
+
         start_date = self.request.GET.get("start_date")
         end_date = self.request.GET.get("end_date")
-        
+
         if start_date and end_date:
             start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
             end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
-            queryset = queryset.filter(timestamps__date__gte = start_date, timestamps__date__lte = end_date)
-            
-            self.balance = TransactionsModel.objects.filter(timestamps__date__gte = start_date, timestamps__date__lte = end_date).aggregate(Sum('amount'))
-            
+            queryset = queryset.filter(
+                timestamps__date__gte=start_date, timestamps__date__lte=end_date
+            )
+
+            self.balance = TransactionsModel.objects.filter(
+                timestamps__date__gte=start_date, timestamps__date__lte=end_date
+            ).aggregate(Sum("amount"))
+
         else:
             self.balance = self.request.user.account.balance
-            
+
         return queryset.distinct()
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update({
-            "amount": self.request.user.account
-        })
+        context.update({"amount": self.request.user.account})
         return context
-            
-            
+
+
+class LoanListView(LoginRequiredMixin, ListView):
+    model = TransactionsModel
+    template_name = "transactions/loan_request_list.html"
+    context_object_name = "loans"
+
+    def get_queryset(self):
+        user_account = self.request.user.account
+        queryset = TransactionsModel.objects.filter(
+            account=user_account, transaction_type=3
+        )
+        return queryset

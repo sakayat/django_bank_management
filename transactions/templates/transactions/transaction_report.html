@@ -44,15 +44,11 @@
           <td>$ {{ transaction.balance_after_transactions|floatformat:2 }}</td>
         </tr>
         {% endfor %}
-       <tr>
-        <th></th>
-        <td colspan="3"></td>
-       </tr>
-       <tr>
-        <th scope="row"></th>
-        <td colspan="2" class="text-end fw-bold">Current Balance</td>
-        <td>$ {{request.user.account.balance|floatformat:2}}</td>
-      </tr>
+        <tr>
+          <th scope="row"></th>
+          <td colspan="2" class="text-end fw-bold">Current Balance</td>
+          <td>$ {{request.user.account.balance|floatformat:2}}</td>
+        </tr>
       </tbody>
     </table>
   </form>
