@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, View
 from .models import TransactionsModel
 from .forms import DepositForm, WithdrawForm, LoanRequestForm
 from django.contrib import messages
@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.http import HttpResponse
 from datetime import datetime
 from django.db.models import Sum
-
+from django.shortcuts import get_object_or_404,redirect
 
 # Create your views here.
 class TransactionCreateMixin(LoginRequiredMixin, CreateView):
@@ -125,3 +125,20 @@ class LoanListView(LoginRequiredMixin, ListView):
             account=user_account, transaction_type=3
         )
         return queryset
+
+class PayLoanView(LoginRequiredMixin, View):
+    def get(self, request, loan_id):
+        loan = get_object_or_404(TransactionsModel, id=loan_id)
+        if loan.loan_approve:
+            user_account = loan.account
+            if loan.amount < user_account.balance:
+                user_account.balance -= loan.amount
+                loan.balance_after_transactions = user_account.balance
+                user_account.save()
+                loan.loan_approve = True
+                loan.transaction_type = 4
+                loan.save()
+                return redirect("loan_list")
+            else:
+                messages.error(f"Loan amount is greater than account balance")
+        return redirect("loan_list")
