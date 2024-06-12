@@ -1,3 +1,4 @@
+from typing import Any
 from django import forms
 from .models import TransactionsModel
 
@@ -52,4 +53,9 @@ class WithdrawForm(TransactionsForm):
                 f"You have {balance}, You can not withdraw more than your account balance"
             )
 
+        return amount
+
+class LoanRequestForm(TransactionsForm):
+    def clean_amount(self):
+        amount = self.cleaned_data.get("amount")
         return amount

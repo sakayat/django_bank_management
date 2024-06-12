@@ -1,10 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
 from .models import TransactionsModel
-from .forms import DepositForm, WithdrawForm
+from .forms import DepositForm, WithdrawForm, LoanRequestForm
 from django.contrib import messages
 from django.urls import reverse_lazy
-
+from django.http import HttpResponse
 
 # Create your views here.
 class TransactionCreateMixin(LoginRequiredMixin, CreateView):
@@ -56,3 +56,18 @@ class WithdrawMoneyView(TransactionCreateMixin):
         messages.success(self.request, f"{amount}$ withdrawn successfully")
         return super().form_valid(form)
 
+class LoanRequestView(TransactionCreateMixin):
+    template_name = "transactions/loan_request_form.html"
+    form_class = LoanRequestForm
+
+    def get_initial(self):
+        initial = {"transaction_type": 3}
+        return initial
+
+    def form_valid(self, form):
+        amount = form.cleaned_data.get("amount")
+        current_loan_count = TransactionsModel.objects.filter(account = self.request.user.account, transaction_type = 3, loan_approve = True).count()
+        if current_loan_count >= 3:
+            return HttpResponse("You Have crossed you loan limits")
+        messages.success(self.request, f"Loan Request for {amount}$ successfully")
+        return super().form_valid(form)
