@@ -57,8 +57,9 @@ class DepositMoneyView(TransactionCreateMixin):
             subject="Deposit Message",
             user=self.request.user,
             amount=amount,
-            template="transactions/deposit_email.html"
+            template="transactions/deposit_mail.html"
         )
+        
         return super().form_valid(form)
 
 
@@ -77,6 +78,14 @@ class WithdrawMoneyView(TransactionCreateMixin):
         account.save(update_fields=["balance"])
 
         messages.success(self.request, f"{amount}$ withdrawn successfully")
+        
+        send_email_to_user(
+            subject="Withdrawal Message",
+            user=self.request.user,
+            amount=amount,
+            template="transactions/withdraw_mail.html"
+        )
+        
         return super().form_valid(form)
 
 
