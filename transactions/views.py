@@ -13,11 +13,10 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
 
-def send_email_to_user(subject, user, amount, email, template):
+def send_email_to_user(subject, user, amount, template):
     subject = subject
     message = render_to_string(template, {"user": user, "amount": amount})
-    to_email = email
-    send_email = EmailMultiAlternatives(subject, message, to=[to_email])
+    send_email = EmailMultiAlternatives(subject, message, to=[user.email])
     send_email.attach_alternative(message, "text/html")
     send_email.send()
 
@@ -58,7 +57,6 @@ class DepositMoneyView(TransactionCreateMixin):
             subject="Deposit Message",
             user=self.request.user,
             amount=amount,
-            email=self.request.user.email,
             template="transactions/deposit_email.html"
         )
         return super().form_valid(form)
