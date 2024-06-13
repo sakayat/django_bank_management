@@ -105,6 +105,14 @@ class LoanRequestView(TransactionCreateMixin):
         if current_loan_count >= 3:
             return HttpResponse("You Have crossed you loan limits")
         messages.success(self.request, f"Loan Request for {amount}$ successfully")
+        
+        send_email_to_user(
+            subject="Loan Request Message",
+            user=self.request.user,
+            amount=amount,
+            template="transactions/loan_request_mail.html"
+        )
+        
         return super().form_valid(form)
 
 
